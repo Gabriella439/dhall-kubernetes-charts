@@ -20,7 +20,7 @@ Each Dhall "chart" is a record with the following Dhall type:
   -- This is analogous to the `./template` subdirectory and the `./NOTES.txt`
   -- file of a Helm chart
   template :
-    DefaultValues ⩓ RequiredValues → { resources : Resources, notes : Text }
+    DefaultValues ⩓ RequiredValues → { resources : List Resource, notes : Text }
 
   -- Default inputs for the chart, designed for use with Dhall's `::` record
   -- completion operator
@@ -45,6 +45,9 @@ in  jenkins.template jenkins.Values::{
     , imagePullPolicy = "IfNotPresent"
     }
 ```
+
+See the documentation for [`./type/Chart.dhall`](./type/Chart.dhall), which
+provides a little more detail.
 
 ## Development status
 
