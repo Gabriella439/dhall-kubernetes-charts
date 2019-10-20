@@ -45,3 +45,9 @@ in  jenkins.template jenkins.Values::{
     , imagePullPolicy = "IfNotPresent"
     }
 ```
+
+## Development status
+
+This repository is entirely experimental.  Feel free to contribute if you want
+but I might mass-refactor things while figuring out best practices for encoding
+charts in Dhall.
