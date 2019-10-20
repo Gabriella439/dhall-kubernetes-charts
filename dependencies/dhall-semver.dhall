@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/Gabriel439/dhall-semver/7f5b7bf0e89664571522de9919edcc8469a55320/package.dhall sha256:e7fabf4caf622b26686e5607e7d5203b4d17609d6a27f6efbc0298f612d98c4e
