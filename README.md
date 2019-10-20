@@ -46,7 +46,7 @@ in  jenkins.template jenkins.Values::{
     }
 ```
 
-See the documentation for [`./type/Chart.dhall`](./type/Chart.dhall), which
+See the documentation for [`./types/Chart.dhall`](./types/Chart.dhall), which
 provides a little more detail.
 
 ## Development status

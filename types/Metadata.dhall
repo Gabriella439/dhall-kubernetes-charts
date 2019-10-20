@@ -28,7 +28,7 @@
       (i.e. no Helm/Tiller intermediate) so there is no need to specify a Tiller
       version
 -}
-let dhall-semver = ../dependency/dhall-semver.dhall
+let dhall-semver = ../dependencies/dhall-semver.dhall
 
 let Maintainer = ./Maintainer.dhall
 

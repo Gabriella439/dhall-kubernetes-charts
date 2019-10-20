@@ -39,7 +39,7 @@
     • The `metadata` field is analogous to the `./Chart.yaml` file for a Helm
       chart
 -}
-let dhall-kubernetes = ../dependency/dhall-kubernetes.dhall
+let dhall-kubernetes = ../dependencies/dhall-kubernetes.dhall
 
 let Metadata = ./Metadata.dhall
 
