@@ -17,8 +17,8 @@ Each Dhall "chart" is a record with the following Dhall type:
 { -- The Kubernetes resource specification, designed to generate an all-in-one
   -- YAML file containing all of the resources
   --
-  -- This is analogous to the `./template` subdirectory and the `NOTES.txt` file
-  -- of a Helm chart
+  -- This is analogous to the `./template` subdirectory and the `./NOTES.txt`
+  -- file of a Helm chart
   template :
     DefaultValues ⩓ RequiredValues → { resources : Resources, notes : Text }
 
@@ -30,8 +30,8 @@ Each Dhall "chart" is a record with the following Dhall type:
 
   -- Metadata about the chart, useful for programmatic queries
   --
-  -- This is analogous to the `Chart.yaml` file of a Helm chart
-, chart : Chart
+  -- This is analogous to the `./Chart.yaml` file of a Helm chart
+, metadata : Metadata
 }
 ```
 

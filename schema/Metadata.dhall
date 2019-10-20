@@ -28,11 +28,11 @@
       (i.e. no Helm/Tiller intermediate) so there is no need to specify a Tiller
       version
 -}
-let dhall-semver = ../dependencies/dhall-semver.dhall
+let dhall-semver = ../dependency/dhall-semver.dhall
 
 let Maintainer = ./Maintainer.dhall
 
-let Chart =
+let Metadata =
       { Type =
           { name : Text
           , kubeVersion : Optional Text
@@ -59,7 +59,10 @@ let Chart =
 
 let minimalExample =
         assert
-      :   Chart::{ name = "Jenkins", appVersion = dhall-semver.version 1 7 8 }
+      :   Metadata::{
+          , name = "Jenkins"
+          , appVersion = dhall-semver.version 1 7 8
+          }
         ≡ { appVersion =
               { build = [] : List Text
               , major = 1
@@ -84,7 +87,7 @@ let minimalExample =
 
 let completeExample =
         assert
-      :   Chart::{
+      :   Metadata::{
           , name = "Jenkins"
           , kubeVersion = Some "^1.14-0"
           , description =
@@ -154,4 +157,4 @@ let completeExample =
                 ]
           }
 
-in  Chart
+in  Metadata
