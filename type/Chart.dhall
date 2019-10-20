@@ -25,7 +25,7 @@
         You can supply this field to `dhall-to-yaml` to generate a valid YAML
         file that you can apply, like so:
 
-            dhall-to-yaml --file ./resources.dhall | kubectl apply --filename=-
+            dhall-to-yaml --documents --file ./resources.dhall | kubectl apply --filename=-
 
       • A `notes` field containing useful information, analogous to the
         `./NOTES.txt` file provided by each Helm chart
