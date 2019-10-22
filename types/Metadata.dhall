@@ -28,8 +28,6 @@
       (i.e. no Helm/Tiller intermediate) so there is no need to specify a Tiller
       version
 -}
-let dhall-semver = ../dependencies/dhall-semver.dhall
-
 let Maintainer = ./Maintainer.dhall
 
 let Metadata =
@@ -42,7 +40,7 @@ let Metadata =
           , sources : Optional (List Text)
           , maintainers : Optional (List Maintainer.Type)
           , icon : Optional Text
-          , appVersion : dhall-semver.SemanticVersion
+          , appVersion : Optional Text
           , deprecated : Optional Bool
           }
       , default =
@@ -53,6 +51,7 @@ let Metadata =
           , sources = None (List Text)
           , maintainers = None (List Maintainer.Type)
           , icon = None Text
+          , appVersion = None Text
           , deprecated = None Bool
           }
       }
@@ -61,15 +60,8 @@ let minimalExample =
         assert
       :   Metadata::{
           , name = "Jenkins"
-          , appVersion = dhall-semver.version 1 7 8
           }
-        ≡ { appVersion =
-              { build = [] : List Text
-              , major = 1
-              , minor = 7
-              , patch = 8
-              , pre-release = [] : List Text
-              }
+        ≡ { appVersion = None Text
           , deprecated = None Bool
           , description = None Text
           , home = None Text
@@ -106,7 +98,7 @@ let completeExample =
                 , "https://github.com/maorfr/kube-tasks"
                 , "https://github.com/jenkinsci/configuration-as-code-plugin"
                 ]
-          , appVersion = dhall-semver.version 1 7 8
+          , appVersion = Some "lts"
           , maintainers =
               Some
                 [ Maintainer::{
@@ -119,13 +111,7 @@ let completeExample =
                 "https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png"
           , deprecated = Some False
           }
-        ≡ { appVersion =
-              { build = [] : List Text
-              , major = 1
-              , minor = 7
-              , patch = 8
-              , pre-release = [] : List Text
-              }
+        ≡ { appVersion = Some "lts"
           , deprecated = Some False
           , description =
               Some
