@@ -1,1 +1,1 @@
-{ Maintainer = ./schema/Maintainer.dhall, Chart = ./schema/Chart.dhall }
+{ Maintainer = ./types/Maintainer.dhall, Chart = ./types/Chart.dhall, Metadata = ./types/Metadata.dhall }
