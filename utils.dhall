@@ -1,5 +1,9 @@
 let Prelude = ./dependencies/Prelude.dhall
 
+let dhall-kubernetes = ./dependencies/dhall-kubernetes.dhall
+
+let Resource = dhall-kubernetes.Resource
+
 let default =
         λ(defaultValue : Text)
       → λ(overrideValue : Optional Text)
@@ -19,4 +23,9 @@ let range
           b
           (λ(x : { mapKey : Text, mapValue : a }) → f x.mapKey x.mapValue)
 
-in  { default = default, range = range }
+let optional =
+        λ(condition : Bool)
+      → λ(conditionalResources : List Resource)
+      → if condition then conditionalResources else [] : List Resource
+
+in  { default = default, range = range, optional = optional }
