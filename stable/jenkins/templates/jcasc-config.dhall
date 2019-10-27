@@ -2,17 +2,10 @@ let dhall-kubernetes = ../../../dependencies/dhall-kubernetes.dhall
 
 let utils = ../../../utils.dhall
 
+let Values = ../Values.dhall
+
 in    λ ( `$`
-        : { Values :
-              { master :
-                  { JCasC :
-                      { enabled : Bool
-                      , configScripts : List { mapKey : Text, mapValue : Text }
-                      , defaultConfig : Bool
-                      }
-                  , sidecars : { configAutoReload : { enabled : Bool } }
-                  }
-              }
+        : { Values : Values.Type
           , jenkins :
               { casc : { defaults : Text }
               , fullname : Text
