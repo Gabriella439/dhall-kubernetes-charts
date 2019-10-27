@@ -1,56 +1,145 @@
-{-  This is the type representing how we translate Helm charts to Dhall
+{-  This file represents the schema for chart-related metadata, similar to the
+    information that Helm stores in a `./Chart.yaml` file within each chart
 
-    • The `input` type parameter is the type of the input to the template.  This
-      field will be a record type of the form:
+    The following fields present in Helm chart metadata are not present in the
+    corresponding Dhall chart metadata:
 
-          input = DefaultValues ⩓ RequiredValues
+    • apiVersion - This repository's chart-related types are not versioned.
+      If you still need a version for your own internal purposes then use the
+      output of the following command:
 
-    • The `values` type parameter is analogous to the schema of the
-      `./Values.yaml` file for a Helm chart
+      ```
+      $ dhall hash --file ./types.dhall
+      ```
 
-      This type parameter is the type of the default values supplied to the
-      chart.  This field will be a record type that is a subset of the `input`
-      field's type:
+      ... which can be automated within Dhall once the following proposal is
+      standardized:
 
-          values = DefaultValues
+      https://github.com/dhall-lang/dhall-lang/issues/739
 
-    • The `template` field is analogous to the `./templates/` subdirectory of a
-      Helm chart
+    • version - Charts in this repository are not versioned using semantic
+      version strings.  Instead, use the `git` revision for this repository to
+      uniquely a specific version of a chart
 
-      This field is a function whose input is a record of configuration options
-      (i.e. `input`) and whose output contains:
+    • engine - The engine for this repository will always be Dhall, so there is
+      no reason to make the engine configurable
 
-      • A `resources` field containing a `List` of Kubernetes resources to apply
-
-        You can supply this field to `dhall-to-yaml` to generate a valid YAML
-        file that you can apply, like so:
-
-            dhall-to-yaml --documents --file ./resources.dhall | kubectl apply --filename=-
-
-      • A `notes` field containing useful information, analogous to the
-        `./NOTES.txt` file provided by each Helm chart
-
-    • The `Values` field is analogous to the `./Values.yaml` file for a Helm
-      chart
-
-      This field stores both the record of `default` values and their `Type`,
-      suitable for use with Dhall's `::` record completion operator
-
-    • The `metadata` field is analogous to the `./Chart.yaml` file for a Helm
-      chart
+    • tillerVersion - This repository generates Kubernetes resources directly
+      (i.e. no Helm/Tiller intermediate) so there is no need to specify a Tiller
+      version
 -}
-let dhall-kubernetes = ../dependencies/dhall-kubernetes.dhall
+let Maintainer = ./Maintainer.dhall
 
-let Metadata = ./Metadata.dhall
+let Chart =
+      { Type =
+          { name : Text
+          , kubeVersion : Optional Text
+          , description : Optional Text
+          , keywords : Optional (List Text)
+          , home : Optional Text
+          , sources : Optional (List Text)
+          , maintainers : Optional (List Maintainer.Type)
+          , icon : Optional Text
+          , appVersion : Optional Text
+          , deprecated : Optional Bool
+          }
+      , default =
+          { kubeVersion = None Text
+          , description = None Text
+          , keywords = None (List Text)
+          , home = None Text
+          , sources = None (List Text)
+          , maintainers = None (List Maintainer.Type)
+          , icon = None Text
+          , appVersion = None Text
+          , deprecated = None Bool
+          }
+      }
 
-let Chart
-    : ∀(input : Type) → ∀(values : Type) → Kind
-    =   λ(input : Type)
-      → λ(values : Type)
-      → { template :
-            input → { resources : List dhall-kubernetes.Resource, notes : Text }
-        , Values : { Type : Type, default : values }
-        , metadata : Metadata.Type
-        }
+let minimalExample =
+        assert
+      :   Chart::{ name = "Jenkins" }
+        ≡ { appVersion = None Text
+          , deprecated = None Bool
+          , description = None Text
+          , home = None Text
+          , icon = None Text
+          , keywords = None (List Text)
+          , kubeVersion = None Text
+          , maintainers =
+              None
+                ( List
+                    { email : Optional Text, name : Text, url : Optional Text }
+                )
+          , name = "Jenkins"
+          , sources = None (List Text)
+          }
+
+let completeExample =
+        assert
+      :   Chart::{
+          , name = "Jenkins"
+          , kubeVersion = Some "^1.14-0"
+          , description =
+              Some
+                ''
+                Open source continuous integration server. It supports multiple SCM tools
+                including CVS, Subversion and Git. It can execute Apache Ant and Apache
+                Maven-based projects as well as arbitrary scripts.
+                ''
+          , keywords = Some [ "ci", "cd" ]
+          , home = Some "https://jenkins.io"
+          , sources =
+              Some
+                [ "https://github.com/jenkinsci/jenkins"
+                , "https://github.com/jenkinsci/docker-jnlp-slave"
+                , "https://github.com/maorfr/kube-tasks"
+                , "https://github.com/jenkinsci/configuration-as-code-plugin"
+                ]
+          , appVersion = Some "lts"
+          , maintainers =
+              Some
+                [ Maintainer::{
+                  , name = "example"
+                  , email = Some "maintainer@example.com"
+                  }
+                ]
+          , icon =
+              Some
+                "https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png"
+          , deprecated = Some False
+          }
+        ≡ { appVersion =
+              Some "lts"
+          , deprecated = Some False
+          , description =
+              Some
+                ''
+                Open source continuous integration server. It supports multiple SCM tools
+                including CVS, Subversion and Git. It can execute Apache Ant and Apache
+                Maven-based projects as well as arbitrary scripts.
+                ''
+          , home = Some "https://jenkins.io"
+          , icon =
+              Some
+                "https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png"
+          , keywords = Some [ "ci", "cd" ]
+          , kubeVersion = Some "^1.14-0"
+          , maintainers =
+              Some
+                [ Maintainer::{
+                  , name = "example"
+                  , email = Some "maintainer@example.com"
+                  }
+                ]
+          , name = "Jenkins"
+          , sources =
+              Some
+                [ "https://github.com/jenkinsci/jenkins"
+                , "https://github.com/jenkinsci/docker-jnlp-slave"
+                , "https://github.com/maorfr/kube-tasks"
+                , "https://github.com/jenkinsci/configuration-as-code-plugin"
+                ]
+          }
 
 in  Chart

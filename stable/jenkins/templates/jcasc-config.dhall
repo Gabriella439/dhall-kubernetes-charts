@@ -4,15 +4,10 @@ let utils = ../../../utils.dhall
 
 let Values = ../Values.dhall
 
+let Jenkins = ./Jenkins.dhall
+
 in    λ (Values : Values.Type)
-    → λ (jenkins :
-              { casc : { defaults : Text }
-              , fullname : Text
-              , name : Text
-              , namespace : Text
-              , labels : List { mapKey : Text, mapValue : Text }
-              }
-        )
+    → λ (jenkins : Jenkins)
     → let labels =
               jenkins.labels
             # [ { mapKey = "${jenkins.fullname}-jenkins-config"
